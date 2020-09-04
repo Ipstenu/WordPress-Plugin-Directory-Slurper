@@ -52,15 +52,15 @@ echo '=======  ' . str_pad( '======', $max_name_length - 3 ) . "===============\
 
 foreach ( $scan_info as $plugin ) {
 	ini_set( 'user_agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:80.0) Gecko/20100101 Firefox/80.0' );
-	$api_url = "https://api.wordpress.org/plugins/info/1.1/?action=plugin_information&request[slug]=$plugin[plugin_name]&request[fields][active_installs]=1";
+	$api_url = "https://api.wordpress.org/plugins/info/1.2/?action=plugin_information&request[slug]=$plugin[plugin_name]&request[fields][active_installs]=1";
 
 	if ( get_http_response_code( $api_url ) != "200" ){
 		$result = false;
 	} else {
-		$result = json_decode( $api_url );
+		$result = json_decode( file_get_contents( $api_url ) );
 	}
 
-	if ( $result ) {
+	if ( false !== $result && $result ) {
 		$active_installs = str_pad(
 			number_format( $result->active_installs ),
 			9, ' ', STR_PAD_LEFT
